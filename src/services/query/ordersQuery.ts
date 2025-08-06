@@ -1,0 +1,38 @@
+import { apiEndpoints } from "@/constants/api_constants";
+import { qKey } from "@/lib/utils";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { assignOrder, getOrders, getOrderStatistics } from "../api/orders";
+import type { OrdersQueryType } from "@/lib/types";
+import { toast } from "sonner";
+
+export const useGetOrderStatistics = () => {
+  return useQuery({
+    queryKey: qKey(apiEndpoints.orders.statistics),
+    queryFn: () => getOrderStatistics(),
+  });
+};
+
+export const useGetOrdersQuery = (data: OrdersQueryType) => {
+  return useQuery({
+    queryKey: qKey([apiEndpoints.orders.orders, JSON.stringify(data)]),
+    queryFn: () => getOrders(data),
+  });
+};
+
+export const useAssignOrderMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationKey: qKey(apiEndpoints.orders.assignOrder),
+    mutationFn: (data: { id: string; fieldExecutiveId: string }) =>
+      assignOrder(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: qKey(apiEndpoints.orders.orders),
+      });
+      toast.success("Order assigned successfully");
+    },
+    onError: () => {
+      toast.error("Failed to assign order");
+    },
+  });
+};
