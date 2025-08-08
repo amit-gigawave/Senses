@@ -12,6 +12,7 @@ import {
 import { Shield, Users, TrendingUp, Eye, EyeOff } from "lucide-react";
 import { useLoginMutation } from "@/services/query/userQuery";
 import type { LoginResponse } from "@/lib/types";
+// import { ImageWithFallback } from "./figma/ImageWithFallback";
 // import sensesLogo from 'figma:asset/f4ed2d55b63c4080b9188766b5c68566c5aeeb31.png';
 
 interface LoginPageProps {
@@ -47,7 +48,11 @@ export function LoginPage({ onLogin }: LoginPageProps) {
           <div className="mb-12">
             <div className="flex items-center mb-6">
               <div className="w-20 h-16 bg-white/95 backdrop-blur-sm rounded-2xl flex items-center justify-center mr-4 p-2">
-                {/* <img src={sensesLogo} alt="SENSES Logo" className="w-full h-full object-contain" /> */}
+                <img
+                  src="/images/logo.jpg"
+                  className="w-full h-full object-contain"
+                />
+                {/* <ImageWithFallback /> */}
               </div>
               <div>
                 <h1 className="text-3xl font-bold">SENSES</h1>
@@ -108,7 +113,11 @@ export function LoginPage({ onLogin }: LoginPageProps) {
           {/* Mobile Logo */}
           <div className="lg:hidden text-center mb-8">
             <div className="w-20 h-16 bg-white rounded-2xl flex items-center justify-center mx-auto mb-4 p-2 shadow-lg">
-              {/* <img src={sensesLogo} alt="SENSES Logo" className="w-full h-full object-contain" /> */}
+              <img
+                src="/images/logo.jpg"
+                alt="SENSES Logo"
+                className="w-full h-full object-contain"
+              />
             </div>
             <h1 className="text-2xl font-bold text-[#2c3e50]">
               SENSES Admin Portal

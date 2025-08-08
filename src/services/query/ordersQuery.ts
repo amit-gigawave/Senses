@@ -1,7 +1,12 @@
 import { apiEndpoints } from "@/constants/api_constants";
 import { qKey } from "@/lib/utils";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { assignOrder, getOrders, getOrderStatistics } from "../api/orders";
+import {
+  assignOrder,
+  getOrders,
+  getOrderStatistics,
+  getReportStatistics,
+} from "../api/orders";
 import type { OrdersQueryType } from "@/lib/types";
 import { toast } from "sonner";
 
@@ -34,5 +39,15 @@ export const useAssignOrderMutation = () => {
     onError: () => {
       toast.error("Failed to assign order");
     },
+  });
+};
+
+export const useGetReportStatistics = (data: {
+  startDate?: string;
+  endDate?: string;
+}) => {
+  return useQuery({
+    queryKey: qKey([apiEndpoints.orders.reports, JSON.stringify(data)]),
+    queryFn: () => getReportStatistics(data),
   });
 };

@@ -22,7 +22,7 @@ import {
 import type { OrderStatisticsType } from "../lib/types";
 import { OrderStatus } from "@/lib/enums";
 import { toLocalISOString } from "@/lib/utils";
-import { format } from "date-fns";
+// import { format } from "date-fns";
 
 export function Dashboard() {
   const mapStats = (data: OrderStatisticsType | undefined) => [
@@ -62,37 +62,13 @@ export function Dashboard() {
       })()
     ),
   });
-  const { data: unassignedOrders, isPending: unassignedOrdersPending } =
-    useGetOrdersQuery({
-      orderStatus: OrderStatus.Created,
-    });
+  // const { data: unassignedOrders, isPending: unassignedOrdersPending } =
+  //   useGetOrdersQuery({
+  //     orderStatus: OrderStatus.Created,
+  //   });
   const stats = mapStats(data);
 
-  // const unassignedOrders = [
-  //   {
-  //     id: "ORD005",
-  //     patient: "Robert Brown",
-  //     type: "Home Collection",
-  //     priority: "High",
-  //     created: "2 hours ago",
-  //   },
-  //   {
-  //     id: "ORD006",
-  //     patient: "Lisa Garcia",
-  //     type: "Hospital Collection",
-  //     priority: "Medium",
-  //     created: "1 hour ago",
-  //   },
-  //   {
-  //     id: "ORD007",
-  //     patient: "David Miller",
-  //     type: "Home Collection",
-  //     priority: "Low",
-  //     created: "30 minutes ago",
-  //   },
-  // ];
-
-  if (isPending || ordersPending || unassignedOrdersPending) {
+  if (isPending || ordersPending) {
     return <div>Loading...</div>;
   }
   return (
@@ -128,7 +104,7 @@ export function Dashboard() {
         ))}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="">
         {/* Recent Collections */}
         <Card>
           <CardHeader>
@@ -181,7 +157,7 @@ export function Dashboard() {
         </Card>
 
         {/* Unassigned Orders Queue */}
-        <Card>
+        {/* <Card>
           <CardHeader>
             <CardTitle className="text-[#2c3e50]">Unassigned Orders</CardTitle>
             <CardDescription>
@@ -219,7 +195,7 @@ export function Dashboard() {
               ))}
             </div>
           </CardContent>
-        </Card>
+        </Card> */}
       </div>
     </div>
   );

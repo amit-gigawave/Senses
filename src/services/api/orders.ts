@@ -72,3 +72,23 @@ export const assignOrder = async ({
     throw handleErr({ e });
   }
 };
+
+export const getReportStatistics = async ({
+  startDate,
+  endDate,
+}: {
+  startDate?: string;
+  endDate?: string;
+}): Promise<OrderStatisticsType> => {
+  try {
+    const snapshot = await axiosInstance.get(
+      apiEndpoints.orders.reports + `?startDate=${startDate}&endDate=${endDate}`
+    );
+    if (snapshot.status == 200) {
+      return snapshot.data;
+    }
+    throw snapshot.data.message;
+  } catch (e) {
+    throw handleErr({ e });
+  }
+};

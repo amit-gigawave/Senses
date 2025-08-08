@@ -34,6 +34,8 @@ import {
   Activity,
 } from "lucide-react";
 import { format } from "date-fns";
+import { useGetReportStatistics } from "@/services/query/ordersQuery";
+import { toLocalISOString } from "@/lib/utils";
 
 export function Reports() {
   const [statsFromDate, setStatsFromDate] = useState<Date | undefined>(
@@ -153,6 +155,14 @@ export function Reports() {
       lightColor: "bg-[#fdeaea]",
     },
   ];
+
+  const {} = useGetReportStatistics({
+    startDate:
+      statsFromDate?.toISOString() ??
+      toLocalISOString(new Date().toISOString()),
+    endDate:
+      statsToDate?.toISOString() ?? toLocalISOString(new Date().toISOString()),
+  });
 
   const handleGenerateHospitalReports = () => {
     // Filter mock data based on selected hospital and date range

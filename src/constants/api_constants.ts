@@ -5,6 +5,7 @@ export const apiEndpoints = {
   },
   orders: {
     statistics: "/orders/dashboard/statistics",
+    reports: "/orders/reports/statistics",
     orders: "/orders",
     assignOrder: "/orders/:id/assign",
   },
