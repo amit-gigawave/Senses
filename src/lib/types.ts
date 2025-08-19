@@ -70,6 +70,7 @@ export type OrderType = {
   collectionDate: string | null;
   createdAt: string;
   updatedAt: string;
+  fieldExecutive: FieldExecutiveType;
 };
 
 export type FieldExecutiveType = {

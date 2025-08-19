@@ -52,8 +52,8 @@ export function Dashboard() {
     },
   ];
 
-  const { data, isPending } = useGetOrderStatistics();
-  const { data: recentOrders, isPending: ordersPending } = useGetOrdersQuery({
+  const { data, isPending, refetch: refetchOrders, isFetching } = useGetOrderStatistics();
+  const { data: recentOrders, isPending: ordersPending, refetch: refetchRecentOrders, isFetching: isRefetching } = useGetOrdersQuery({
     startDate: toLocalISOString(
       (() => {
         const date = new Date();
@@ -68,7 +68,7 @@ export function Dashboard() {
   //   });
   const stats = mapStats(data);
 
-  if (isPending || ordersPending) {
+  if (isPending || ordersPending || isFetching || isRefetching) {
     return <div>Loading...</div>;
   }
   return (
@@ -77,6 +77,10 @@ export function Dashboard() {
         <Button
           variant="outline"
           className="!border-[#3498db] text-[#3498db] !bg-transparent"
+          onClick={() => {
+            refetchOrders()
+            refetchRecentOrders()
+          }}
         >
           Refresh Data
         </Button>
@@ -142,8 +146,8 @@ export function Dashboard() {
                           collection.orderStatus === OrderStatus.Completed
                             ? "bg-[#27ae60] text-white"
                             : collection.orderStatus === OrderStatus.OnTheWay
-                            ? "bg-[#f39c12] text-white"
-                            : "bg-[#3498db] text-white"
+                              ? "bg-[#f39c12] text-white"
+                              : "bg-[#3498db] text-white"
                         }
                       >
                         {collection.orderStatus}

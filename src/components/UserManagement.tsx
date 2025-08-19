@@ -41,9 +41,10 @@ import { UserRole } from "@/lib/enums";
 import type { FieldExecutiveType } from "@/lib/types";
 import {
   useCreateUserMutation,
-  useUpdateStatusMutation,
+  useUpdateStatusMutation
 } from "@/services/query/userManagementQuery";
 import type { UserCreateType } from "@/lib/types";
+import { exportJsonToExcel } from "@/lib/exporters/reportExport";
 
 export function UserManagement() {
   const [showAddUser, setShowAddUser] = useState(false);
@@ -69,6 +70,7 @@ export function UserManagement() {
   const { mutateAsync: updateStatus } = useUpdateStatusMutation();
   const { mutateAsync: createUser, isPending: createUserPending } =
     useCreateUserMutation();
+  // const { mutateAsync: updateUser, isPending: updatePending } = useUpdateUserMutation()
 
   const handleAddUser = async () => {
     // Construct the user object
@@ -112,6 +114,39 @@ export function UserManagement() {
     );
   };
 
+  // Export helpers per tab
+  const exportFieldExecutives = () => {
+    const rows = (filterUsers() ?? []).map((u: any) => ({
+      "User ID": u.userId,
+      Name: u.name,
+      Email: u.email,
+      Status: u.isActive ? "Active" : "Inactive",
+    }));
+    exportJsonToExcel("Field Executives", "Field_Executives", rows);
+  };
+
+  const exportAdministrators = () => {
+    const rows = (filterUsers() ?? []).map((u: any) => ({
+      "User ID": u.userId,
+      Name: u.name,
+      Email: u.email,
+      Status: u.isActive ? "Active" : "Inactive",
+      Role: u.role,
+    }));
+    exportJsonToExcel("Administrators", "Administrators", rows);
+  };
+
+  const exportHospitalStaff = () => {
+    const rows = (filterUsers() ?? []).map((u: any) => ({
+      "User ID": u.userId,
+      Name: u.name,
+      Email: u.email,
+      Hospital: u.hospitalName,
+      Status: u.isActive ? "Active" : "Inactive",
+    }));
+    exportJsonToExcel("Hospital Staff", "Hospital_Staff", rows);
+  };
+
   const FieldExecutiveTable = ({
     users,
   }: {
@@ -133,6 +168,7 @@ export function UserManagement() {
             <TableCell className="font-medium">{user.userId}</TableCell>
             <TableCell>{user.name}</TableCell>
             <TableCell>{user.email}</TableCell>
+
             <TableCell>
               <Badge
                 variant={user.isActive ? "default" : "secondary"}
@@ -222,6 +258,7 @@ export function UserManagement() {
           <TableHead>User ID</TableHead>
           <TableHead>Name</TableHead>
           <TableHead>Email</TableHead>
+          <TableHead>Hospital</TableHead>
           <TableHead>Status</TableHead>
         </TableRow>
       </TableHeader>
@@ -231,6 +268,7 @@ export function UserManagement() {
             <TableCell className="font-medium">{user.userId}</TableCell>
             <TableCell>{user.name}</TableCell>
             <TableCell>{user.email}</TableCell>
+            <TableCell>{user.hospitalName}</TableCell>
             <TableCell>
               <Badge
                 variant={user.isActive ? "default" : "secondary"}
@@ -405,6 +443,7 @@ export function UserManagement() {
                 <Button
                   variant="outline"
                   className="border-[#3498db] text-[#3498db]"
+                  onClick={exportFieldExecutives}
                 >
                   <Download className="w-4 h-4 mr-2" />
                   Export Data
@@ -422,6 +461,7 @@ export function UserManagement() {
                 <Button
                   variant="outline"
                   className="border-[#3498db] text-[#3498db]"
+                  onClick={exportAdministrators}
                 >
                   <Download className="w-4 h-4 mr-2" />
                   Export Data
@@ -439,6 +479,7 @@ export function UserManagement() {
                 <Button
                   variant="outline"
                   className="border-[#3498db] text-[#3498db]"
+                  onClick={exportHospitalStaff}
                 >
                   <Download className="w-4 h-4 mr-2" />
                   Export Data

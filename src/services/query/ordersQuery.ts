@@ -3,6 +3,7 @@ import { qKey } from "@/lib/utils";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   assignOrder,
+  getHospitalsReports,
   getOrders,
   getOrderStatistics,
   getReportStatistics,
@@ -17,10 +18,14 @@ export const useGetOrderStatistics = () => {
   });
 };
 
-export const useGetOrdersQuery = (data: OrdersQueryType) => {
+export const useGetOrdersQuery = (
+  data: OrdersQueryType,
+  options?: { enabled?: boolean }
+) => {
   return useQuery({
     queryKey: qKey([apiEndpoints.orders.orders, JSON.stringify(data)]),
     queryFn: () => getOrders(data),
+    enabled: options?.enabled ?? true,
   });
 };
 
@@ -49,5 +54,17 @@ export const useGetReportStatistics = (data: {
   return useQuery({
     queryKey: qKey([apiEndpoints.orders.reports, JSON.stringify(data)]),
     queryFn: () => getReportStatistics(data),
+  });
+};
+
+export const useGetHospitalsReportsQuery = (data: {
+  startDate?: string;
+  endDate?: string;
+  hospitalName?: string
+}, options?: { enabled?: boolean }) => {
+  return useQuery({
+    queryKey: qKey([apiEndpoints.orders.hospitalReports, JSON.stringify(data)]),
+    queryFn: () => getHospitalsReports(data),
+    enabled: options?.enabled ?? true,
   });
 };

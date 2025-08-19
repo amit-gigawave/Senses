@@ -9,35 +9,28 @@ import {
   CardHeader,
   CardTitle,
 } from "./ui/card";
-import { Shield, Users, TrendingUp, Eye, EyeOff } from "lucide-react";
-import { useLoginMutation } from "@/services/query/userQuery";
-import type { LoginResponse } from "@/lib/types";
-import { toast } from "sonner";
+import { Shield, Users, TrendingUp} from "lucide-react";
+// import { useLoginMutation } from "@/services/query/userQuery";
+// import type { LoginResponse } from "@/lib/types";
 // import { ImageWithFallback } from "./figma/ImageWithFallback";
 // import sensesLogo from 'figma:asset/f4ed2d55b63c4080b9188766b5c68566c5aeeb31.png';
 
-interface LoginPageProps {
-  onLogin: (credentials: LoginResponse) => void;
-}
+// interface ForgotPasswordProps {
+//   onLogin: (credentials: LoginResponse) => void;
+// }
 
-const phoneRegex = /^\+?[1-9]\d{9}$/;
-
-export function LoginPage({ onLogin }: LoginPageProps) {
-  const { mutateAsync: login, isPending } = useLoginMutation();
+export function ForgotPassword() {
+//   const { mutateAsync: login, isPending } = useLoginMutation();
   const [phone, setPhone] = useState("");
-  const [password, setPassword] = useState("");
+//   const [password, setPassword] = useState("");
   // const [isLoading, setIsLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
+//   const [showPassword, setShowPassword] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!phoneRegex.test(phone)) {
-      toast.error("Invalid Phone Number");
-      return;
-    }
-    const data = await login({ phone: "+91" + phone, password });
-    onLogin(data);
-  };
+//   const handleSubmit = async (e: React.FormEvent) => {
+//     e.preventDefault();
+//     const data = await login({ phone, password });
+//     // onLogin(data);
+//   };
 
   return (
     <div className="min-h-screen flex">
@@ -114,7 +107,7 @@ export function LoginPage({ onLogin }: LoginPageProps) {
         </div>
       </div>
 
-      {/* Right Side - Login Form */}
+      {/* Right Side - Forgot Password Form */}
       <div className="flex-1 flex items-center justify-center bg-gradient-to-br from-[#f8fafc] to-[#f1f5f9] p-8">
         <div className="w-full max-w-md">
           {/* Mobile Logo */}
@@ -134,98 +127,58 @@ export function LoginPage({ onLogin }: LoginPageProps) {
           <Card className="border-0 shadow-2xl bg-white/80 backdrop-blur-sm">
             <CardHeader className="text-center pb-8">
               <CardTitle className="text-2xl text-[#2c3e50] mb-2">
-                Welcome Back
+                Forgot Password
               </CardTitle>
               <CardDescription className="text-base text-[#717182]">
-                Sign in to access SENSES administrator dashboard
+                Enter your email or phone number. We’ll send you a reset link or OTP.
               </CardDescription>
             </CardHeader>
 
             <CardContent className="px-8 pb-8">
-              <form onSubmit={handleSubmit} className="space-y-6">
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  // TODO: wire up forgot password request API
+                  console.log("Request password reset for:", phone);
+                }}
+                className="space-y-6"
+              >
                 <div className="space-y-2">
-                  <Label htmlFor="email" className="text-[#2c3e50] font-medium">
-                    Phone
+                  <Label htmlFor="phone" className="text-[#2c3e50] font-medium">
+                    Email or Phone
                   </Label>
                   <Input
                     id="phone"
                     type="text"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
-                    placeholder="+91 xxxxxxxxxx"
+                    placeholder="e.g. user@example.com or +91 xxxxxxxxxx"
                     className="h-12 bg-[#f8fafc] border-[#e2e8f0] focus:border-[#3498db] focus:ring-[#3498db]/20 rounded-xl"
                     required
                   />
                 </div>
 
-                <div className="space-y-2">
-                  <Label
-                    htmlFor="password"
-                    className="text-[#2c3e50] font-medium"
-                  >
-                    Password
-                  </Label>
-                  <div className="relative">
-                    <Input
-                      id="password"
-                      type={showPassword ? "text" : "password"}
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      placeholder="Enter your password"
-                      className="h-12 bg-[#f8fafc] border-[#e2e8f0] focus:border-[#3498db] focus:ring-[#3498db]/20 rounded-xl pr-12"
-                      required
-                    />
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="sm"
-                      className="absolute right-3 top-1/2 -translate-y-1/2 h-8 w-8 p-0 hover:bg-transparent"
-                      onClick={() => setShowPassword(!showPassword)}
-                    >
-                      {showPassword ? (
-                        <EyeOff className="h-4 w-4 text-[#717182]" />
-                      ) : (
-                        <Eye className="h-4 w-4 text-[#717182]" />
-                      )}
-                    </Button>
-                  </div>
-                </div>
-                {/* 
-                <div className="flex items-center justify-between">
-                  <label className="flex items-center space-x-2 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      className="w-4 h-4 text-[#3498db] bg-[#f8fafc] border-[#e2e8f0] rounded focus:ring-[#3498db]/20 focus:ring-2"
-                    />
-                    <span className="text-sm text-[#717182]">Remember me</span>
-                  </label>
+                <div className="flex items-center justify-end">
                   <a
-                    href="/forgot-password"
+                    href="/login"
                     className="text-sm text-[#3498db] hover:text-[#2980b9] font-medium transition-colors"
                   >
-                    Forgot password?
+                    Back to login
                   </a>
-                </div> */}
+                </div>
 
                 <Button
                   type="submit"
                   className="w-full h-12 bg-gradient-to-r from-[#3498db] to-[#2980b9] hover:from-[#2980b9] hover:to-[#2574a9] text-white font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 transform hover:-translate-y-0.5"
-                  disabled={isPending}
+                //   disabled={isPending}
                 >
-                  {isPending ? (
-                    <div className="flex items-center space-x-2">
-                      <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                      <span>Signing in...</span>
-                    </div>
-                  ) : (
-                    "Sign In to Dashboard"
-                  )}
+                  "Send reset link / OTP"
                 </Button>
               </form>
 
               <div className="mt-8 pt-6 border-t border-[#e2e8f0]">
                 <p className="text-center text-sm text-[#717182]">
-                  Need access? Contact your{" "}
+                  Need help? Contact your{" "}
                   <a
                     href="#"
                     className="text-[#3498db] hover:text-[#2980b9] font-medium"
@@ -240,7 +193,7 @@ export function LoginPage({ onLogin }: LoginPageProps) {
           {/* Footer */}
           <div className="text-center mt-8 text-sm text-[#717182]">
             <p>
-              © 2025 SENSES - Genetic and Specialty Diagnostics. All rights
+              &copy; 2024 SENSES - Genetic and Specialty Diagnostics. All rights
               reserved.
             </p>
           </div>

@@ -14,6 +14,7 @@ import { getCookie, removeCookie } from "./lib/utils";
 import { toast } from "sonner";
 import type { LoginResponse } from "./lib/types";
 import { Route, Switch, useLocation } from "wouter";
+import { ForgotPassword } from "./components/ForgorPassword";
 
 interface User {
   email: string;
@@ -30,7 +31,7 @@ export default function App() {
   const [location, setLocation] = useLocation();
 
   useEffect(() => {
-    if (!isLoggedIn && location !== "/login") {
+    if (!isLoggedIn && location !== "/login" && location !== "/forgot-password") {
       setLocation("/login");
     }
     if (isLoggedIn && location === "/login") {
@@ -84,6 +85,9 @@ export default function App() {
     return <LoginPage onLogin={handleLogin} />;
   }
 
+  if (!isLoggedIn && location === "/forgot-password") {
+    return <ForgotPassword />;
+  }
   return (
     <div className="h-screen bg-[#f5f6fa] flex">
       <Sidebar
@@ -117,6 +121,7 @@ export default function App() {
             <Route path="/">
               <Dashboard />
             </Route>
+            
             <Route path="/orders">
               <OrderAssignment />
             </Route>

@@ -95,9 +95,9 @@ export default function Sidebar({
       </nav>
 
       {/* Sidebar Footer */}
-      <div className="p-4 border-t border-[#e9ebef]">
+      <div className="p-4 border-t border-[#e9ebef] flex ">
         {sidebarOpen && currentUser && (
-          <div className="mb-3">
+          <div className="mb-3 flex-1 ">
             <p className="text-sm font-medium text-[#2c3e50]">
               {currentUser.name}
             </p>
@@ -106,11 +106,11 @@ export default function Sidebar({
         )}
         <Button
           variant="ghost"
-          className="w-full justify-start text-[#717182] hover:text-[#e74c3c] hover:bg-[#f5f6fa]"
+          className="w-fit justify-start text-[#717182] hover:text-[#e74c3c] hover:bg-[#f5f6fa]"
           onClick={onLogout}
         >
           <LogOut className="w-4 h-4 mr-3" />
-          {sidebarOpen && "Logout"}
+          {/* {sidebarOpen && "Logout"} */}
         </Button>
       </div>
     </div>

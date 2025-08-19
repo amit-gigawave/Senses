@@ -4,12 +4,17 @@ import type { FieldExecutiveType, UserCreateType } from "@/lib/types";
 import { apiEndpoints } from "@/constants/api_constants";
 import { qKey } from "@/lib/utils";
 import { toast } from "sonner";
+import { UserRole } from "@/lib/enums";
 
 export const useCreateUserMutation = () => {
+  const queryClient = useQueryClient()
   return useMutation({
     mutationKey: qKey(apiEndpoints.userManagement.createUser),
     mutationFn: (data: UserCreateType) => createUser(data),
     onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: qKey([apiEndpoints.user.users, UserRole.field_executive])
+      })
       toast.success("User created successfully");
     },
   });
