@@ -31,7 +31,11 @@ export default function App() {
   const [location, setLocation] = useLocation();
 
   useEffect(() => {
-    if (!isLoggedIn && location !== "/login" && location !== "/forgot-password") {
+    if (
+      !isLoggedIn &&
+      location !== "/login" &&
+      location !== "/forgot-password"
+    ) {
       setLocation("/login");
     }
     if (isLoggedIn && location === "/login") {
@@ -118,10 +122,13 @@ export default function App() {
         {/* Page Content */}
         <main className="flex-1 overflow-auto p-6">
           <Switch>
+            <Route path="/login">
+              <LoginPage onLogin={handleLogin} />;
+            </Route>
             <Route path="/">
               <Dashboard />
             </Route>
-            
+
             <Route path="/orders">
               <OrderAssignment />
             </Route>
