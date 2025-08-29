@@ -29,3 +29,44 @@ export const getUsers = async (role: string): Promise<FieldExecutiveType[]> => {
     throw handleErr({ e });
   }
 };
+
+export const forgotPassword = async (phone: string): Promise<string> => {
+  try {
+    const snapshot = await axiosInstance.post(
+      apiEndpoints.user.forgotPassword,
+      {
+        phone,
+      }
+    );
+    if (snapshot.status == 200) {
+      return snapshot.data.message;
+    }
+    throw snapshot.data.message;
+  } catch (e) {
+    throw handleErr({ e });
+  }
+};
+
+export const resetPassword = async ({
+  phone,
+  password,
+  confirmPassword,
+}: {
+  phone: string;
+  password: string;
+  confirmPassword: string;
+}): Promise<string> => {
+  try {
+    const snapshot = await axiosInstance.post(apiEndpoints.user.resetPassword, {
+      phone,
+      password,
+      confirmPassword,
+    });
+    if (snapshot.status == 200) {
+      return snapshot.data.message;
+    }
+    throw snapshot.data.message;
+  } catch (e) {
+    throw handleErr({ e });
+  }
+};

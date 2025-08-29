@@ -41,10 +41,11 @@ import { UserRole } from "@/lib/enums";
 import type { FieldExecutiveType } from "@/lib/types";
 import {
   useCreateUserMutation,
-  useUpdateStatusMutation
+  useUpdateStatusMutation,
 } from "@/services/query/userManagementQuery";
 import type { UserCreateType } from "@/lib/types";
 import { exportJsonToExcel } from "@/lib/exporters/reportExport";
+import { cn } from "@/lib/utils";
 
 export function UserManagement() {
   const [showAddUser, setShowAddUser] = useState(false);
@@ -58,7 +59,7 @@ export function UserManagement() {
   const [editName, setEditName] = useState("");
   const [editEmail, setEditEmail] = useState("");
   const [fullName, setFullName] = useState("");
-  const [userIdInput, setUserIdInput] = useState("");
+  // const [userIdInput, setUserIdInput] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
 
@@ -76,7 +77,6 @@ export function UserManagement() {
     // Construct the user object
     const user: UserCreateType = {
       name: fullName,
-      userId: userIdInput,
       email,
       phone,
       role: userType === "admin" ? UserRole.admin : UserRole.field_executive,
@@ -86,7 +86,6 @@ export function UserManagement() {
     setUserType("");
     // setAdminRole("");
     setFullName("");
-    setUserIdInput("");
     setPhone("");
     setEmail("");
   };
@@ -195,6 +194,9 @@ export function UserManagement() {
                     updateStatus({ id: user.id, isActive: !user.isActive })
                   }
                   checked={user.isActive}
+                  className={cn([
+                    "data-[state=unchecked]:bg-secondary-foreground/20 ",
+                  ])}
                 />
               </div>
             </TableCell>
@@ -341,7 +343,7 @@ export function UserManagement() {
                   onChange={(e) => setFullName(e.target.value)}
                 />
               </div>
-              <div className="space-y-2">
+              {/* <div className="space-y-2">
                 <Label htmlFor="userId">User ID</Label>
                 <Input
                   id="userId"
@@ -349,7 +351,7 @@ export function UserManagement() {
                   value={userIdInput}
                   onChange={(e) => setUserIdInput(e.target.value)}
                 />
-              </div>
+              </div> */}
               <div className="space-y-2">
                 <Label htmlFor="phone">Phone Number</Label>
                 <Input
@@ -382,13 +384,7 @@ export function UserManagement() {
               <Button
                 onClick={handleAddUser}
                 className="bg-[#3498db] hover:bg-[#2980b9] text-white"
-                disabled={
-                  createUserPending ||
-                  !userIdInput ||
-                  !fullName ||
-                  !email ||
-                  !phone
-                }
+                disabled={createUserPending || !fullName || !email || !phone}
               >
                 Create User
               </Button>
@@ -434,7 +430,7 @@ export function UserManagement() {
                 placeholder="Search users..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="max-w-sm"
+                className="max-w-sm border-black/10"
               />
             </div>
 

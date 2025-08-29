@@ -1,6 +1,18 @@
 import { Button } from "./ui/button";
 import { LogOut, Menu, X } from "lucide-react";
 import type { ComponentType } from "react";
+import { useState } from "react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "./ui/alert-dialog";
 
 type NavigationItem = {
   path: string;
@@ -27,6 +39,12 @@ export default function Sidebar({
   currentUser,
   onLogout,
 }: SidebarProps) {
+  const [showLogoutDialog, setShowLogoutDialog] = useState(false);
+
+  const handleLogout = () => {
+    setShowLogoutDialog(false);
+    onLogout();
+  };
   return (
     <div
       className={`${
@@ -104,14 +122,39 @@ export default function Sidebar({
             <p className="text-xs text-[#717182]">{currentUser.role}</p>
           </div>
         )}
-        <Button
-          variant="ghost"
-          className="w-fit justify-start text-[#717182] hover:text-[#e74c3c] hover:bg-[#f5f6fa]"
-          onClick={onLogout}
-        >
-          <LogOut className="w-4 h-4 mr-3" />
-          {/* {sidebarOpen && "Logout"} */}
-        </Button>
+        <AlertDialog open={showLogoutDialog} onOpenChange={setShowLogoutDialog}>
+          <AlertDialogTrigger asChild>
+            <Button
+              variant="ghost"
+              className="w-fit justify-start text-[#717182] hover:text-[#e74c3c] hover:bg-[#f5f6fa]"
+            >
+              <LogOut className="w-4 h-4 mr-3" />
+              {/* {sidebarOpen && "Logout"} */}
+            </Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent className="bg-white">
+            <AlertDialogHeader>
+              <AlertDialogTitle className="text-[#2c3e50]">
+                Confirm Logout
+              </AlertDialogTitle>
+              <AlertDialogDescription className="text-[#717182]">
+                Are you sure you want to logout? You will need to sign in again
+                to access the admin portal.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel className="text-[#717182] border-[#e2e8f0] hover:bg-[#f8fafc]">
+                Cancel
+              </AlertDialogCancel>
+              <AlertDialogAction
+                onClick={handleLogout}
+                className="bg-[#e74c3c] hover:bg-[#c0392b] text-white"
+              >
+                Logout
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
     </div>
   );

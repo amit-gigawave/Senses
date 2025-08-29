@@ -7,15 +7,18 @@ import { toast } from "sonner";
 import { UserRole } from "@/lib/enums";
 
 export const useCreateUserMutation = () => {
-  const queryClient = useQueryClient()
+  const queryClient = useQueryClient();
   return useMutation({
     mutationKey: qKey(apiEndpoints.userManagement.createUser),
     mutationFn: (data: UserCreateType) => createUser(data),
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: qKey([apiEndpoints.user.users, UserRole.field_executive])
-      })
+        queryKey: qKey([apiEndpoints.user.users, UserRole.field_executive]),
+      });
       toast.success("User created successfully");
+    },
+    onError: (e) => {
+      toast.error(e.message || "Error creating user");
     },
   });
 };
@@ -26,6 +29,9 @@ export const useUpdateStatusMutation = () => {
     mutationFn: (data: { id: string; isActive: boolean }) => updateStatus(data),
     onSuccess: () => {
       toast.success("User status updated successfully");
+    },
+    onError: (e) => {
+      toast.error(e.message || "Error updating user status");
     },
   });
 };
@@ -40,6 +46,9 @@ export const useUpdateUserMutation = () => {
         queryKey: qKey([apiEndpoints.user.users, variables.role]),
       });
       toast.success("User updated successfully");
+    },
+    onError: (e) => {
+      toast.error(e.message || "Error updating user");
     },
   });
 };

@@ -2,6 +2,8 @@ export const apiEndpoints = {
   user: {
     login: "/auth/login",
     users: "/users",
+    forgotPassword: "/auth/forgot-password",
+    resetPassword: "/auth/reset-password",
   },
   orders: {
     statistics: "/orders/dashboard/statistics",

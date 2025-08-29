@@ -41,8 +41,8 @@ export const useAssignOrderMutation = () => {
       });
       toast.success("Order assigned successfully");
     },
-    onError: () => {
-      toast.error("Failed to assign order");
+    onError: (e) => {
+      toast.error(e.message || "Failed to assign order");
     },
   });
 };
@@ -57,11 +57,14 @@ export const useGetReportStatistics = (data: {
   });
 };
 
-export const useGetHospitalsReportsQuery = (data: {
-  startDate?: string;
-  endDate?: string;
-  hospitalName?: string
-}, options?: { enabled?: boolean }) => {
+export const useGetHospitalsReportsQuery = (
+  data: {
+    startDate?: string;
+    endDate?: string;
+    hospitalName?: string;
+  },
+  options?: { enabled?: boolean }
+) => {
   return useQuery({
     queryKey: qKey([apiEndpoints.orders.hospitalReports, JSON.stringify(data)]),
     queryFn: () => getHospitalsReports(data),

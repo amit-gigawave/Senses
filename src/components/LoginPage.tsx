@@ -12,7 +12,6 @@ import {
 import { Shield, Users, TrendingUp, Eye, EyeOff } from "lucide-react";
 import { useLoginMutation } from "@/services/query/userQuery";
 import type { LoginResponse } from "@/lib/types";
-import { toast } from "sonner";
 // import { ImageWithFallback } from "./figma/ImageWithFallback";
 // import sensesLogo from 'figma:asset/f4ed2d55b63c4080b9188766b5c68566c5aeeb31.png';
 
@@ -20,23 +19,79 @@ interface LoginPageProps {
   onLogin: (credentials: LoginResponse) => void;
 }
 
-const phoneRegex = /^\+?[1-9]\d{9}$/;
+const phoneRegex = /^[6-9]\d{9}$/; // Exactly 10 digits, starting with 6-9
+const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$/; // At least 8 chars with 1 lowercase, 1 uppercase, 1 digit, 1 special char
 
 export function LoginPage({ onLogin }: LoginPageProps) {
   const { mutateAsync: login, isPending } = useLoginMutation();
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
-  // const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [phoneError, setPhoneError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+
+  const validatePhone = (phoneNumber: string) => {
+    if (!phoneNumber) {
+      setPhoneError("Phone number is required");
+      return false;
+    }
+    if (!phoneRegex.test(phoneNumber)) {
+      setPhoneError("Enter a valid 10-digit mobile number (starting with 6-9)");
+      return false;
+    }
+    setPhoneError("");
+    return true;
+  };
+
+  const validatePassword = (pwd: string) => {
+    if (!pwd) {
+      setPasswordError("Password is required");
+      return false;
+    }
+    if (!passwordRegex.test(pwd)) {
+      setPasswordError(
+        "Password must contain at least 8 characters with 1 uppercase, 1 lowercase, 1 digit, and 1 special character"
+      );
+      return false;
+    }
+    setPasswordError("");
+    return true;
+  };
+
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.replace(/\D/g, ""); // Only allow digits
+    if (value.length <= 10) {
+      setPhone(value);
+      if (phoneError && value) {
+        validatePhone(value);
+      }
+    }
+  };
+
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setPassword(value);
+    if (passwordError && value) {
+      validatePassword(value);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!phoneRegex.test(phone)) {
-      toast.error("Invalid Phone Number");
+
+    const isPhoneValid = validatePhone(phone);
+    const isPasswordValid = validatePassword(password);
+
+    if (!isPhoneValid || !isPasswordValid) {
       return;
     }
-    const data = await login({ phone: "+91" + phone, password });
-    onLogin(data);
+
+    try {
+      const data = await login({ phone: "+91" + phone, password });
+      onLogin(data);
+    } catch (error) {
+      // Error handling is done by the mutation hook
+    }
   };
 
   return (
@@ -144,18 +199,29 @@ export function LoginPage({ onLogin }: LoginPageProps) {
             <CardContent className="px-8 pb-8">
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="space-y-2">
-                  <Label htmlFor="email" className="text-[#2c3e50] font-medium">
-                    Phone
+                  <Label htmlFor="phone" className="text-[#2c3e50] font-medium">
+                    Mobile Number
                   </Label>
-                  <Input
-                    id="phone"
-                    type="text"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    placeholder="+91 xxxxxxxxxx"
-                    className="h-12 bg-[#f8fafc] border-[#e2e8f0] focus:border-[#3498db] focus:ring-[#3498db]/20 rounded-xl"
-                    required
-                  />
+                  <div className="relative">
+                    <div className="absolute left-3 top-1/2 -translate-y-1/2 text-[#717182] font-medium">
+                      +91
+                    </div>
+                    <Input
+                      id="phone"
+                      type="text"
+                      value={phone}
+                      onChange={handlePhoneChange}
+                      placeholder="Enter 10-digit mobile number"
+                      className={`h-12 pl-12 bg-[#f8fafc] border-[#e2e8f0] focus:border-[#3498db] focus:ring-[#3498db]/20 rounded-xl ${
+                        phoneError ? "border-red-500 focus:border-red-500" : ""
+                      }`}
+                      maxLength={10}
+                      required
+                    />
+                  </div>
+                  {phoneError && (
+                    <p className="text-sm text-red-500 mt-1">{phoneError}</p>
+                  )}
                 </div>
 
                 <div className="space-y-2">
@@ -170,9 +236,13 @@ export function LoginPage({ onLogin }: LoginPageProps) {
                       id="password"
                       type={showPassword ? "text" : "password"}
                       value={password}
-                      onChange={(e) => setPassword(e.target.value)}
+                      onChange={handlePasswordChange}
                       placeholder="Enter your password"
-                      className="h-12 bg-[#f8fafc] border-[#e2e8f0] focus:border-[#3498db] focus:ring-[#3498db]/20 rounded-xl pr-12"
+                      className={`h-12 bg-[#f8fafc] border-[#e2e8f0] focus:border-[#3498db] focus:ring-[#3498db]/20 rounded-xl pr-12 ${
+                        passwordError
+                          ? "border-red-500 focus:border-red-500"
+                          : ""
+                      }`}
                       required
                     />
                     <Button
@@ -189,23 +259,30 @@ export function LoginPage({ onLogin }: LoginPageProps) {
                       )}
                     </Button>
                   </div>
+                  {passwordError && (
+                    <p className="text-sm text-red-500 mt-1">{passwordError}</p>
+                  )}
+                  <div className="text-xs text-[#717182] mt-1">
+                    Password must contain at least 8 characters with 1
+                    uppercase, 1 lowercase, 1 digit, and 1 special character
+                  </div>
                 </div>
-                {/* 
-                <div className="flex items-center justify-between">
-                  <label className="flex items-center space-x-2 cursor-pointer">
+
+                <div className="flex items-center justify-end">
+                  {/* <label className="flex items-center space-x-2 cursor-pointer">
                     <input
                       type="checkbox"
                       className="w-4 h-4 text-[#3498db] bg-[#f8fafc] border-[#e2e8f0] rounded focus:ring-[#3498db]/20 focus:ring-2"
                     />
                     <span className="text-sm text-[#717182]">Remember me</span>
-                  </label>
+                  </label> */}
                   <a
                     href="/forgot-password"
-                    className="text-sm text-[#3498db] hover:text-[#2980b9] font-medium transition-colors"
+                    className="text-sm text-[#3498db] hover:text-[#2980b9] font-medium transition-colors "
                   >
                     Forgot password?
                   </a>
-                </div> */}
+                </div>
 
                 <Button
                   type="submit"

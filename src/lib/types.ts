@@ -92,7 +92,6 @@ export type FieldExecutiveType = {
 
 export type UserCreateType = {
   name: string;
-  userId: string;
   email: string;
   phone: string;
   role: string;

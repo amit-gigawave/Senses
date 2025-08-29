@@ -9,7 +9,8 @@ import {
   CardHeader,
   CardTitle,
 } from "./ui/card";
-import { Shield, Users, TrendingUp} from "lucide-react";
+import { Shield, Users, TrendingUp } from "lucide-react";
+import { useForgotPasswordMutation } from "@/services/query/userQuery";
 // import { useLoginMutation } from "@/services/query/userQuery";
 // import type { LoginResponse } from "@/lib/types";
 // import { ImageWithFallback } from "./figma/ImageWithFallback";
@@ -19,18 +20,40 @@ import { Shield, Users, TrendingUp} from "lucide-react";
 //   onLogin: (credentials: LoginResponse) => void;
 // }
 
+const phoneRegex = /^[6-9]\d{9}$/;
 export function ForgotPassword() {
-//   const { mutateAsync: login, isPending } = useLoginMutation();
+  const { mutateAsync: forgotPassword } = useForgotPasswordMutation();
   const [phone, setPhone] = useState("");
-//   const [password, setPassword] = useState("");
-  // const [isLoading, setIsLoading] = useState(false);
-//   const [showPassword, setShowPassword] = useState(false);
+  const [phoneError, setPhoneError] = useState("");
 
-//   const handleSubmit = async (e: React.FormEvent) => {
-//     e.preventDefault();
-//     const data = await login({ phone, password });
-//     // onLogin(data);
-//   };
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    await forgotPassword(phone);
+    // onLogin(data);
+  };
+
+  const validatePhone = (phoneNumber: string) => {
+    if (!phoneNumber) {
+      setPhoneError("Phone number is required");
+      return false;
+    }
+    if (!phoneRegex.test(phoneNumber)) {
+      setPhoneError("Enter a valid 10-digit mobile number (starting with 6-9)");
+      return false;
+    }
+    setPhoneError("");
+    return true;
+  };
+
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.replace(/\D/g, ""); // Only allow digits
+    if (value.length <= 10) {
+      setPhone(value);
+      if (phoneError && value) {
+        validatePhone(value);
+      }
+    }
+  };
 
   return (
     <div className="min-h-screen flex">
@@ -130,19 +153,13 @@ export function ForgotPassword() {
                 Forgot Password
               </CardTitle>
               <CardDescription className="text-base text-[#717182]">
-                Enter your email or phone number. We’ll send you a reset link or OTP.
+                Enter your email or phone number. We’ll send you a reset link or
+                OTP.
               </CardDescription>
             </CardHeader>
 
             <CardContent className="px-8 pb-8">
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  // TODO: wire up forgot password request API
-                  console.log("Request password reset for:", phone);
-                }}
-                className="space-y-6"
-              >
+              <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="space-y-2">
                   <Label htmlFor="phone" className="text-[#2c3e50] font-medium">
                     Email or Phone
@@ -151,7 +168,7 @@ export function ForgotPassword() {
                     id="phone"
                     type="text"
                     value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
+                    onChange={(e) => handlePhoneChange(e)}
                     placeholder="e.g. user@example.com or +91 xxxxxxxxxx"
                     className="h-12 bg-[#f8fafc] border-[#e2e8f0] focus:border-[#3498db] focus:ring-[#3498db]/20 rounded-xl"
                     required
@@ -170,9 +187,9 @@ export function ForgotPassword() {
                 <Button
                   type="submit"
                   className="w-full h-12 bg-gradient-to-r from-[#3498db] to-[#2980b9] hover:from-[#2980b9] hover:to-[#2574a9] text-white font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 transform hover:-translate-y-0.5"
-                //   disabled={isPending}
+                  //   disabled={isPending}
                 >
-                  "Send reset link / OTP"
+                  Send reset link / OTP
                 </Button>
               </form>
 

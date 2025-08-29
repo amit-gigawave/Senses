@@ -52,12 +52,29 @@ export function Dashboard() {
     },
   ];
 
-  const { data, isPending, refetch: refetchOrders, isFetching } = useGetOrderStatistics();
-  const { data: recentOrders, isPending: ordersPending, refetch: refetchRecentOrders, isFetching: isRefetching } = useGetOrdersQuery({
+  const {
+    data,
+    isPending,
+    refetch: refetchOrders,
+    isFetching,
+  } = useGetOrderStatistics();
+  const {
+    data: recentOrders,
+    isPending: ordersPending,
+    refetch: refetchRecentOrders,
+    isFetching: isRefetching,
+  } = useGetOrdersQuery({
     startDate: toLocalISOString(
       (() => {
         const date = new Date();
         date.setHours(0, 0, 0, 0);
+        return date.toISOString();
+      })()
+    ),
+    endDate: toLocalISOString(
+      (() => {
+        const date = new Date();
+        date.setHours(23, 59, 59, 999);
         return date.toISOString();
       })()
     ),
@@ -78,8 +95,8 @@ export function Dashboard() {
           variant="outline"
           className="!border-[#3498db] text-[#3498db] !bg-transparent"
           onClick={() => {
-            refetchOrders()
-            refetchRecentOrders()
+            refetchOrders();
+            refetchRecentOrders();
           }}
         >
           Refresh Data
@@ -108,7 +125,7 @@ export function Dashboard() {
         ))}
       </div>
 
-      <div className="">
+      <div className="space-y-6">
         {/* Recent Collections */}
         <Card>
           <CardHeader>
@@ -134,7 +151,7 @@ export function Dashboard() {
                       {collection.id}
                     </TableCell>
                     <TableCell>{collection.patientName}</TableCell>
-                    <TableCell>{collection.fieldExecutiveId}</TableCell>
+                    <TableCell>{collection.fieldExecutive?.name}</TableCell>
                     <TableCell>
                       <Badge
                         variant={
@@ -146,8 +163,8 @@ export function Dashboard() {
                           collection.orderStatus === OrderStatus.Completed
                             ? "bg-[#27ae60] text-white"
                             : collection.orderStatus === OrderStatus.OnTheWay
-                              ? "bg-[#f39c12] text-white"
-                              : "bg-[#3498db] text-white"
+                            ? "bg-[#f39c12] text-white"
+                            : "bg-[#3498db] text-white"
                         }
                       >
                         {collection.orderStatus}

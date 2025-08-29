@@ -198,7 +198,14 @@ export function OrderAssignment() {
       </div>
 
       {/* Assignment Dialog */}
-      <Dialog open={showAssignDialog} onOpenChange={setShowAssignDialog}>
+      <Dialog
+        open={showAssignDialog}
+        onOpenChange={() => {
+          setShowAssignDialog((prev) => !prev);
+          setSelectedExecutive("");
+          setAssignmentNotes("");
+        }}
+      >
         <DialogContent className="sm:max-w-[500px]">
           <DialogHeader>
             <DialogTitle>Assign Order to Executive</DialogTitle>
