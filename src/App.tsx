@@ -85,13 +85,25 @@ export default function App() {
     }
   }, [getCookie("user")]);
 
-  if (!isLoggedIn && location === "/login") {
-    return <LoginPage onLogin={handleLogin} />;
+  // Handle authentication routes
+  if (!isLoggedIn) {
+    return (
+      <Switch>
+        <Route path="/login">
+          <LoginPage onLogin={handleLogin} />
+        </Route>
+        <Route path="/forgot-password">
+          <ForgotPassword />
+        </Route>
+        {/* Redirect to login for any other route when not logged in */}
+        <Route>
+          <LoginPage onLogin={handleLogin} />
+        </Route>
+      </Switch>
+    );
   }
 
-  if (!isLoggedIn && location === "/forgot-password") {
-    return <ForgotPassword />;
-  }
+  // Handle authenticated routes
   return (
     <div className="h-screen bg-[#f5f6fa] flex">
       <Sidebar
@@ -122,13 +134,9 @@ export default function App() {
         {/* Page Content */}
         <main className="flex-1 overflow-auto p-6">
           <Switch>
-            <Route path="/login">
-              <LoginPage onLogin={handleLogin} />;
-            </Route>
             <Route path="/">
               <Dashboard />
             </Route>
-
             <Route path="/orders">
               <OrderAssignment />
             </Route>
