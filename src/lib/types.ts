@@ -46,6 +46,7 @@ export type OrdersQueryType = {
 
 export type OrderType = {
   id: string;
+  orderNumber: string;
   orderType: string;
   orderStatus: string;
   fieldExecutiveId: string | null;

@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -28,6 +28,7 @@ import { ExportButtons } from "../ExportButtons";
 import { useGetUsersQuery } from "@/services/query/userQuery";
 import { UserRole } from "@/lib/enums";
 import { useGetHospitalsReportsQuery } from "@/services/query/ordersQuery";
+import { toLocalISOString } from "@/lib/utils";
 
 export function HospitalTab() {
   const [selectedHospital, setSelectedHospital] = useState("all");
@@ -45,8 +46,8 @@ export function HospitalTab() {
   const { data } = useGetUsersQuery(UserRole.hospital_staff);
   const { data: hospitalReportsData, refetch } = useGetHospitalsReportsQuery(
     {
-      startDate: format(fromDate, "yyyy-MM-dd"),
-      endDate: format(toDate, "yyyy-MM-dd"),
+      startDate: toLocalISOString(fromDate),
+      endDate: toLocalISOString(toDate),
       ...(selectedHospital !== "all" && { hospitalName: selectedHospital }),
     },
     { enabled: false }
@@ -55,7 +56,7 @@ export function HospitalTab() {
   const handleGenerateHospitalReports = async () => {
     setFromDate(hospitalFromDate);
     setToDate(hospitalToDate);
-    refetch();
+    // refetch();
     setShowHospitalReports(true);
   };
 
@@ -69,13 +70,19 @@ export function HospitalTab() {
 
   console.log({ hospitalReportsData });
 
+  useEffect(() => {
+    refetch();
+  }, [fromDate, toDate]);
+
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="space-y-2">
           <Label>Hospital</Label>
           <Select value={selectedHospital} onValueChange={setSelectedHospital}>
-            <SelectTrigger>
+            <SelectTrigger
+              className={`h-12 bg-[#f8fafc] border-[#e2e8f0] focus:border-[#3498db] focus:ring-[#3498db]/20 rounded-lg pr-12`}
+            >
               <SelectValue placeholder="Select hospital" />
             </SelectTrigger>
             <SelectContent>

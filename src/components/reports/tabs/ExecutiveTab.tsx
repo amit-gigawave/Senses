@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -28,6 +28,7 @@ import { ExportButtons } from "../ExportButtons";
 import { useGetUsersQuery } from "@/services/query/userQuery";
 import { UserRole } from "@/lib/enums";
 import { useGetOrdersQuery } from "@/services/query/ordersQuery";
+import { toLocalISOString } from "@/lib/utils";
 
 export function ExecutiveTab() {
   const [selectedExecutive, setSelectedExecutive] = useState<string>("all");
@@ -51,8 +52,8 @@ export function ExecutiveTab() {
       ...(selectedExecutive !== "all" && {
         fieldExecutiveId: selectedExecutive,
       }),
-      startDate: fromDate?.toISOString(),
-      endDate: toDate?.toISOString(),
+      startDate: toLocalISOString(fromDate),
+      endDate: toLocalISOString(toDate),
     },
     { enabled: false }
   );
@@ -60,9 +61,13 @@ export function ExecutiveTab() {
   const handleGenerateExecutiveReports = async () => {
     setFromDate(executiveFromDate);
     setToDate(executiveToDate);
-    await refetch();
+    // await refetch();
     setShowExecutiveReports(true);
   };
+
+  useEffect(() => {
+    refetch();
+  }, [fromDate, toDate]);
 
   return (
     <div className="space-y-4">
@@ -73,7 +78,9 @@ export function ExecutiveTab() {
             value={selectedExecutive}
             onValueChange={setSelectedExecutive}
           >
-            <SelectTrigger>
+            <SelectTrigger
+              className={`h-12 bg-[#f8fafc] border-[#e2e8f0] focus:border-[#3498db] focus:ring-[#3498db]/20 rounded-lg pr-12 `}
+            >
               <SelectValue placeholder="Select executive" />
             </SelectTrigger>
             <SelectContent>

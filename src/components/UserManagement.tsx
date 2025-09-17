@@ -78,7 +78,7 @@ export function UserManagement() {
     const user: UserCreateType = {
       name: fullName,
       email,
-      phone,
+      phone: "+91" + phone,
       role: userType === "admin" ? UserRole.admin : UserRole.field_executive,
     };
     await createUser(user);
@@ -116,7 +116,7 @@ export function UserManagement() {
   // Export helpers per tab
   const exportFieldExecutives = () => {
     const rows = (filterUsers() ?? []).map((u: any) => ({
-      "User ID": u.userId,
+      "User ID": u.phone,
       Name: u.name,
       Email: u.email,
       Status: u.isActive ? "Active" : "Inactive",
@@ -126,7 +126,7 @@ export function UserManagement() {
 
   const exportAdministrators = () => {
     const rows = (filterUsers() ?? []).map((u: any) => ({
-      "User ID": u.userId,
+      "User ID": u.phone,
       Name: u.name,
       Email: u.email,
       Status: u.isActive ? "Active" : "Inactive",
@@ -137,7 +137,7 @@ export function UserManagement() {
 
   const exportHospitalStaff = () => {
     const rows = (filterUsers() ?? []).map((u: any) => ({
-      "User ID": u.userId,
+      "User ID": u.phone,
       Name: u.name,
       Email: u.email,
       Hospital: u.hospitalName,
@@ -164,7 +164,7 @@ export function UserManagement() {
       <TableBody>
         {users?.map((user) => (
           <TableRow key={user.id}>
-            <TableCell className="font-medium">{user.userId}</TableCell>
+            <TableCell className="font-medium">{user.phone}</TableCell>
             <TableCell>{user.name}</TableCell>
             <TableCell>{user.email}</TableCell>
 
@@ -221,7 +221,7 @@ export function UserManagement() {
       <TableBody>
         {users?.map((user) => (
           <TableRow key={user.id}>
-            <TableCell className="font-medium">{user.userId}</TableCell>
+            <TableCell className="font-medium">{user.phone}</TableCell>
             <TableCell>{user.name}</TableCell>
             <TableCell>{user.email}</TableCell>
             <TableCell>
@@ -267,7 +267,7 @@ export function UserManagement() {
       <TableBody>
         {users?.map((user) => (
           <TableRow key={user.id}>
-            <TableCell className="font-medium">{user.userId}</TableCell>
+            <TableCell className="font-medium">{user.phone}</TableCell>
             <TableCell>{user.name}</TableCell>
             <TableCell>{user.email}</TableCell>
             <TableCell>{user.hospitalName}</TableCell>
@@ -309,7 +309,9 @@ export function UserManagement() {
               <div className="space-y-2">
                 <Label htmlFor="userType">User Type</Label>
                 <Select value={userType} onValueChange={setUserType}>
-                  <SelectTrigger>
+                  <SelectTrigger
+                    className={`!h-12 w-full bg-[#f8fafc] border-[#e2e8f0] focus:border-[#3498db] focus:ring-[#3498db]/20 rounded-xl $`}
+                  >
                     <SelectValue placeholder="Select user type" />
                   </SelectTrigger>
                   <SelectContent>
@@ -339,6 +341,7 @@ export function UserManagement() {
                 <Input
                   id="fullName"
                   placeholder="Enter full name"
+                  className="h-12 bg-[#f8fafc] border-[#e2e8f0] focus:border-[#3498db] focus:ring-[#3498db]/20 rounded-xl"
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
                 />
@@ -354,12 +357,21 @@ export function UserManagement() {
               </div> */}
               <div className="space-y-2">
                 <Label htmlFor="phone">Phone Number</Label>
-                <Input
-                  id="phone"
-                  placeholder="Enter phone number"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                />
+                <div className="relative flex items-center">
+                  <div className="absolute left-3 top-1/2 -translate-y-1/2 text-[#717182] font-medium ">
+                    +91
+                  </div>
+                  <Input
+                    id="phone"
+                    type="text"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    placeholder="Enter 10-digit mobile number"
+                    className={`h-12 pl-12 bg-[#f8fafc] border-[#e2e8f0] focus:border-[#3498db] focus:ring-[#3498db]/20 rounded-xl $`}
+                    maxLength={10}
+                    required
+                  />
+                </div>
               </div>
               {/* {userType === "executive" && (
                 <div className="space-y-2">
@@ -371,6 +383,7 @@ export function UserManagement() {
                 <Label htmlFor="email">Email</Label>
                 <Input
                   id="email"
+                  className={`h-12 bg-[#f8fafc] border-[#e2e8f0] focus:border-[#3498db] focus:ring-[#3498db]/20 rounded-xl $`}
                   placeholder="Enter email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}

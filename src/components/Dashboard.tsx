@@ -148,7 +148,7 @@ export function Dashboard() {
                 {recentOrders?.map((collection) => (
                   <TableRow key={collection.id}>
                     <TableCell className="font-medium">
-                      {collection.id}
+                      {collection.orderNumber}
                     </TableCell>
                     <TableCell>{collection.patientName}</TableCell>
                     <TableCell>{collection.fieldExecutive?.name}</TableCell>

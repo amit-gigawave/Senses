@@ -1,5 +1,11 @@
 import { useMemo, useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "./ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 import { StatsOverview } from "./reports/StatsOverview";
 import { HospitalTab } from "./reports/tabs/HospitalTab";
@@ -9,12 +15,14 @@ import { useGetReportStatistics } from "@/services/query/ordersQuery";
 import { toLocalISOString } from "@/lib/utils";
 
 export function Reports() {
-  const [statsFromDate, setStatsFromDate] = useState<Date>(new Date(new Date().getFullYear(), new Date().getMonth(), 1));
+  const [statsFromDate, setStatsFromDate] = useState<Date>(
+    new Date(new Date().getFullYear(), new Date().getMonth(), 1)
+  );
   const [statsToDate, setStatsToDate] = useState<Date>(new Date());
 
   const { data } = useGetReportStatistics({
-    startDate: statsFromDate?.toISOString() ?? toLocalISOString(statsFromDate),
-    endDate: statsToDate?.toISOString() ?? toLocalISOString(statsToDate),
+    startDate: toLocalISOString(statsFromDate),
+    endDate: toLocalISOString(statsToDate),
   });
 
   const stats = useMemo(() => {
@@ -51,7 +59,9 @@ export function Reports() {
         setStatsFromDate={setStatsFromDate}
         setStatsToDate={setStatsToDate}
         stats={stats}
-        onUpdate={() => { /* trigger if needed */ }}
+        onUpdate={() => {
+          /* trigger if needed */
+        }}
       />
 
       <Card>
@@ -64,10 +74,16 @@ export function Reports() {
         <CardContent>
           <Tabs defaultValue="hospital" className="w-full">
             <TabsList className="grid w-full grid-cols-2 h-12 bg-[#f5f6fa] p-1">
-              <TabsTrigger value="hospital" className="h-10 data-[state=active]:bg-white data-[state=active]:text-[#2c3e50] data-[state=active]:shadow-sm">
+              <TabsTrigger
+                value="hospital"
+                className="h-10 data-[state=active]:bg-white data-[state=active]:text-[#2c3e50] data-[state=active]:shadow-sm"
+              >
                 Hospital
               </TabsTrigger>
-              <TabsTrigger value="executive" className="h-10 data-[state=active]:bg-white data-[state=active]:text-[#2c3e50] data-[state=active]:shadow-sm">
+              <TabsTrigger
+                value="executive"
+                className="h-10 data-[state=active]:bg-white data-[state=active]:text-[#2c3e50] data-[state=active]:shadow-sm"
+              >
                 Executive
               </TabsTrigger>
             </TabsList>

@@ -268,21 +268,21 @@ export function LoginPage({ onLogin }: LoginPageProps) {
                   </div>
                 </div>
 
-                <div className="flex items-center justify-end">
-                  {/* <label className="flex items-center space-x-2 cursor-pointer">
+                {/* <div className="flex items-center justify-end">
+                  <label className="flex items-center space-x-2 cursor-pointer">
                     <input
                       type="checkbox"
                       className="w-4 h-4 text-[#3498db] bg-[#f8fafc] border-[#e2e8f0] rounded focus:ring-[#3498db]/20 focus:ring-2"
                     />
                     <span className="text-sm text-[#717182]">Remember me</span>
-                  </label> */}
+                  </label>
                   <a
                     href="/forgot-password"
                     className="text-sm text-[#3498db] hover:text-[#2980b9] font-medium transition-colors "
                   >
                     Forgot password?
                   </a>
-                </div>
+                </div> */}
 
                 <Button
                   type="submit"

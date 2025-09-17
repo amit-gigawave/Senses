@@ -94,7 +94,7 @@ export function OrderAssignment() {
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <span className="font-medium text-[#2c3e50]">
-                          {order.id}
+                          {order.orderNumber}
                         </span>
                         <Badge
                           variant="outline"
@@ -253,7 +253,9 @@ export function OrderAssignment() {
                   value={selectedExecutive}
                   onValueChange={setSelectedExecutive}
                 >
-                  <SelectTrigger>
+                  <SelectTrigger
+                    className={`!h-12 w-full bg-[#f8fafc] border-[#e2e8f0] focus:border-[#3498db] focus:ring-[#3498db]/20 rounded-xl $`}
+                  >
                     <SelectValue placeholder="Choose an executive" />
                   </SelectTrigger>
                   <SelectContent>
@@ -272,6 +274,7 @@ export function OrderAssignment() {
                 <Label htmlFor="notes">Assignment Notes (Optional)</Label>
                 <Textarea
                   id="notes"
+                  className={`!h-12 w-full bg-[#f8fafc] border-[#e2e8f0] focus:border-[#3498db] focus:ring-[#3498db]/20 rounded-xl $`}
                   placeholder="Add any special instructions..."
                   value={assignmentNotes}
                   onChange={(e) => setAssignmentNotes(e.target.value)}
