@@ -56,7 +56,7 @@ export function HospitalTab() {
   const handleGenerateHospitalReports = async () => {
     setFromDate(hospitalFromDate);
     setToDate(hospitalToDate);
-    // refetch();
+    refetch();
     setShowHospitalReports(true);
   };
 
@@ -185,7 +185,9 @@ export function HospitalTab() {
             <TableBody>
               {hospitalReportsData?.map((report, index) => (
                 <TableRow key={index}>
-                  <TableCell className="font-medium">{report.id}</TableCell>
+                  <TableCell className="font-medium">
+                    {report.orderNumber}
+                  </TableCell>
                   <TableCell>{report.hospitalName}</TableCell>
                   <TableCell>{report.fieldExecutive?.name}</TableCell>
                   <TableCell>{report.amountCollected}</TableCell>

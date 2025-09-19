@@ -61,7 +61,7 @@ export function ExecutiveTab() {
   const handleGenerateExecutiveReports = async () => {
     setFromDate(executiveFromDate);
     setToDate(executiveToDate);
-    // await refetch();
+    await refetch();
     setShowExecutiveReports(true);
   };
 
@@ -172,7 +172,9 @@ export function ExecutiveTab() {
             <TableBody>
               {orders?.map((report, index) => (
                 <TableRow key={index}>
-                  <TableCell className="font-medium">{report.id}</TableCell>
+                  <TableCell className="font-medium">
+                    {report.orderNumber}
+                  </TableCell>
                   <TableCell>{report.hospitalName}</TableCell>
                   <TableCell>{report.fieldExecutive?.name}</TableCell>
                   <TableCell>{report.amountCollected}</TableCell>
