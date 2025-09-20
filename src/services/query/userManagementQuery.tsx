@@ -1,17 +1,38 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createUser, updateStatus, updateUser } from "../api/userManagement";
+import {
+  createUser,
+  setPassword,
+  updateStatus,
+  updateUser,
+} from "../api/userManagement";
 import type { FieldExecutiveType, UserCreateType } from "@/lib/types";
 import { apiEndpoints } from "@/constants/api_constants";
 import { qKey } from "@/lib/utils";
 import { toast } from "sonner";
 import { UserRole } from "@/lib/enums";
 
-export const useCreateUserMutation = () => {
+export const useCreateUserMutation = ({
+  isAdministrator,
+  password,
+  confirmPassword,
+}: {
+  isAdministrator: boolean;
+  password: string;
+  confirmPassword: string;
+}) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationKey: qKey(apiEndpoints.userManagement.createUser),
     mutationFn: (data: UserCreateType) => createUser(data),
-    onSuccess: () => {
+    onSuccess: async (data, variables) => {
+      console.log(data);
+      if (isAdministrator) {
+        await setPassword({
+          phone: variables.phone,
+          password: password,
+          confirmPassword: confirmPassword,
+        });
+      }
       queryClient.invalidateQueries({
         queryKey: qKey([apiEndpoints.user.users, UserRole.field_executive]),
       });

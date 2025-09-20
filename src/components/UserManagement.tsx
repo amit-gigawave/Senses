@@ -35,7 +35,7 @@ import {
 } from "./ui/select";
 import { Switch } from "./ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
-import { Download } from "lucide-react";
+import { Download, Eye, EyeOff } from "lucide-react";
 import { useGetUsersQuery } from "@/services/query/userQuery";
 import { UserRole } from "@/lib/enums";
 import type { FieldExecutiveType } from "@/lib/types";
@@ -47,21 +47,63 @@ import type { UserCreateType } from "@/lib/types";
 import { exportJsonToExcel } from "@/lib/exporters/reportExport";
 import { cn } from "@/lib/utils";
 
+// const phoneRegex = /^[6-9]\d{9}$/; // Exactly 10 digits, starting with 6-9
+const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$/; // At least 8 chars with 1 lowercase, 1 uppercase, 1 digit, 1 special char
+
 export function UserManagement() {
   const [showAddUser, setShowAddUser] = useState(false);
   const [userType, setUserType] = useState<string>("");
   const [selectedTab, setSelectedTab] = useState<string>(
     UserRole.field_executive
   );
-  // const [adminRole, setAdminRole] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [editingUser, setEditingUser] = useState<any>(null);
   const [editName, setEditName] = useState("");
   const [editEmail, setEditEmail] = useState("");
   const [fullName, setFullName] = useState("");
-  // const [userIdInput, setUserIdInput] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [passwordError, setPasswordError] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [confirmPasswordError, setConfirmPasswordError] = useState("");
+
+  const validatePassword = (pwd: string) => {
+    if (!pwd) {
+      setPasswordError("Password is required");
+      return false;
+    }
+    if (!passwordRegex.test(pwd)) {
+      setPasswordError(
+        "Password must contain at least 8 characters with 1 uppercase, 1 lowercase, 1 digit, and 1 special character"
+      );
+      return false;
+    }
+    setPasswordError("");
+    return true;
+  };
+
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setPassword(value);
+    if (passwordError && value) {
+      validatePassword(value);
+    }
+  };
+
+  const handleConfirmPasswordChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const value = e.target.value;
+    setConfirmPassword(value);
+    if (value !== password) {
+      setConfirmPasswordError("Passwords do not match");
+    } else {
+      setConfirmPasswordError("");
+    }
+  };
 
   const {
     data: response,
@@ -70,7 +112,11 @@ export function UserManagement() {
   } = useGetUsersQuery(selectedTab);
   const { mutateAsync: updateStatus } = useUpdateStatusMutation();
   const { mutateAsync: createUser, isPending: createUserPending } =
-    useCreateUserMutation();
+    useCreateUserMutation({
+      isAdministrator: userType === "admin",
+      password,
+      confirmPassword,
+    });
   // const { mutateAsync: updateUser, isPending: updatePending } = useUpdateUserMutation()
 
   const handleAddUser = async () => {
@@ -81,6 +127,12 @@ export function UserManagement() {
       phone: "+91" + phone,
       role: userType === "admin" ? UserRole.admin : UserRole.field_executive,
     };
+
+    console.log({ password, confirmPassword });
+    if (userType === "admin" && (password === "" || confirmPassword === "")) {
+      setPasswordError("Password and confirm password are required");
+      return;
+    }
     await createUser(user);
     setShowAddUser(false);
     setUserType("");
@@ -390,6 +442,96 @@ export function UserManagement() {
                 />
               </div>
             </div>
+            {userType == "admin" && (
+              <>
+                <div className="space-y-2">
+                  <Label
+                    htmlFor="password"
+                    className="text-[#2c3e50] font-medium"
+                  >
+                    Password
+                  </Label>
+                  <div className="relative">
+                    <Input
+                      id="password"
+                      type={showPassword ? "text" : "password"}
+                      value={password}
+                      onChange={handlePasswordChange}
+                      placeholder="Enter your password"
+                      className={`h-12 bg-[#f8fafc] border-[#e2e8f0] focus:border-[#3498db] focus:ring-[#3498db]/20 rounded-xl pr-12 ${
+                        passwordError
+                          ? "border-red-500 focus:border-red-500"
+                          : ""
+                      }`}
+                      required
+                    />
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 h-8 w-8 p-0 hover:bg-transparent"
+                      onClick={() => setShowPassword(!showPassword)}
+                    >
+                      {showPassword ? (
+                        <EyeOff className="h-4 w-4 text-[#717182]" />
+                      ) : (
+                        <Eye className="h-4 w-4 text-[#717182]" />
+                      )}
+                    </Button>
+                  </div>
+                  {passwordError && (
+                    <p className="text-sm text-red-500 mt-1">{passwordError}</p>
+                  )}
+                  <div className="text-xs text-[#717182] mt-1">
+                    Password must contain at least 8 characters with 1
+                    uppercase, 1 lowercase, 1 digit, and 1 special character
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label
+                    htmlFor="password"
+                    className="text-[#2c3e50] font-medium"
+                  >
+                    Confirm Password
+                  </Label>
+                  <div className="relative">
+                    <Input
+                      id="password"
+                      type={showConfirmPassword ? "text" : "password"}
+                      value={confirmPassword}
+                      onChange={handleConfirmPasswordChange}
+                      placeholder="Enter your password"
+                      className={`h-12 bg-[#f8fafc] border-[#e2e8f0] focus:border-[#3498db] focus:ring-[#3498db]/20 rounded-xl pr-12 ${
+                        passwordError
+                          ? "border-red-500 focus:border-red-500"
+                          : ""
+                      }`}
+                      required
+                    />
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 h-8 w-8 p-0 hover:bg-transparent"
+                      onClick={() =>
+                        setShowConfirmPassword(!showConfirmPassword)
+                      }
+                    >
+                      {showConfirmPassword ? (
+                        <EyeOff className="h-4 w-4 text-[#717182]" />
+                      ) : (
+                        <Eye className="h-4 w-4 text-[#717182]" />
+                      )}
+                    </Button>
+                  </div>
+                  {confirmPasswordError && (
+                    <p className="text-sm text-red-500 mt-1">
+                      {confirmPasswordError}
+                    </p>
+                  )}
+                </div>
+              </>
+            )}
             <div className="flex justify-end gap-2">
               <Button variant="outline" onClick={() => setShowAddUser(false)}>
                 Cancel

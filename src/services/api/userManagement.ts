@@ -1,11 +1,30 @@
 import { apiEndpoints } from "@/constants/api_constants";
-import type { FieldExecutiveType, UserCreateType } from "@/lib/types";
+import type {
+  FieldExecutiveType,
+  SetPasswordType,
+  UserCreateType,
+} from "@/lib/types";
 import { axiosInstance, handleErr } from "@/lib/utils";
 
 export const createUser = async (data: UserCreateType) => {
   try {
     const snapshot = await axiosInstance.post(
       apiEndpoints.userManagement.createUser,
+      data
+    );
+    if (snapshot.status == 201) {
+      return snapshot.data;
+    }
+    throw snapshot.data.message;
+  } catch (e) {
+    throw handleErr({ e });
+  }
+};
+
+export const setPassword = async (data: SetPasswordType) => {
+  try {
+    const snapshot = await axiosInstance.post(
+      apiEndpoints.userManagement.setPassword,
       data
     );
     if (snapshot.status == 201) {

@@ -30,6 +30,23 @@ export default function App() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [location, setLocation] = useLocation();
 
+  const getNavigationItems = () => [
+    { path: "/", label: "Dashboard", icon: LayoutDashboard },
+    { path: "/orders", label: "Sample Assignment", icon: ClipboardList },
+    { path: "/users", label: "User Management", icon: Users },
+    ...(currentUser?.role !== "admin"
+      ? [
+          {
+            path: "/reports",
+            label: "Reports & Analytics",
+            icon: BarChart3,
+          },
+        ]
+      : []),
+  ];
+
+  const navigationItems = getNavigationItems();
+
   useEffect(() => {
     if (
       !isLoggedIn &&
@@ -41,7 +58,15 @@ export default function App() {
     if (isLoggedIn && location === "/login") {
       setLocation("/");
     }
-  }, [isLoggedIn, location, setLocation]);
+    // Redirect admin users away from reports page if they try to access it directly
+    if (
+      isLoggedIn &&
+      location === "/reports" &&
+      currentUser?.role === "admin"
+    ) {
+      setLocation("/");
+    }
+  }, [isLoggedIn, location, setLocation, currentUser]);
 
   const handleLogin = (credentials: LoginResponse) => {
     // Mock login - in real app, this would validate against Supabase
@@ -62,28 +87,25 @@ export default function App() {
     setLocation("/login");
   };
 
-  const navigationItems = [
-    { path: "/", label: "Dashboard", icon: LayoutDashboard },
-    { path: "/orders", label: "Sample Assignment", icon: ClipboardList },
-    { path: "/users", label: "User Management", icon: Users },
-    { path: "/reports", label: "Reports & Analytics", icon: BarChart3 },
-  ];
-
   useEffect(() => {
     const userString = getCookie("user");
 
     console.log({ userString });
     if (userString) {
-      const decoded = decodeURIComponent(userString);
-      const user = JSON.parse(decoded);
+      try {
+        const decoded = decodeURIComponent(userString);
+        const user = JSON.parse(decoded);
 
-      setCurrentUser({
-        email: user.email,
-        name: user.name,
-        role: user.role,
-      });
+        setCurrentUser({
+          email: user.email,
+          name: user.name,
+          role: user.role,
+        });
+      } catch (error) {
+        console.error("Error parsing user data:", error);
+      }
     }
-  }, [getCookie("user")]);
+  }, [isLoggedIn]);
 
   // Handle authentication routes
   if (!isLoggedIn) {
@@ -144,7 +166,18 @@ export default function App() {
               <UserManagement />
             </Route>
             <Route path="/reports">
-              <Reports />
+              {currentUser?.role !== "admin" ? (
+                <Reports />
+              ) : (
+                <div className="flex flex-col items-center justify-center h-full">
+                  <h2 className="text-2xl font-bold text-gray-800 mb-2">
+                    Access Denied
+                  </h2>
+                  <p className="text-gray-600">
+                    Admin users do not have access to reports.
+                  </p>
+                </div>
+              )}
             </Route>
             <Route path="/executives">
               <FieldExecutiveManagement />

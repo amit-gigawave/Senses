@@ -97,3 +97,9 @@ export type UserCreateType = {
   phone: string;
   role: string;
 };
+
+export type SetPasswordType = {
+  phone: string;
+  password: string;
+  confirmPassword: string;
+};

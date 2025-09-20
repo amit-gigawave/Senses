@@ -16,5 +16,6 @@ export const apiEndpoints = {
     createUser: "/auth/signup",
     updateStatus: "/users/status/:id",
     updateUser: "/users/:id",
+    setPassword: "/auth/set-password",
   },
 };
