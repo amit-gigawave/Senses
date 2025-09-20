@@ -88,10 +88,7 @@ export function HospitalTab() {
             <SelectContent>
               <SelectItem value="all">All Hospitals</SelectItem>
               {hospitalOptions.map((hospital) => (
-                <SelectItem
-                  key={hospital as string}
-                  value={(hospital as string).toLowerCase().split(" ").join("")}
-                >
+                <SelectItem key={hospital as string} value={hospital as string}>
                   {hospital as string}
                 </SelectItem>
               ))}
