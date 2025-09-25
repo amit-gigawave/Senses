@@ -117,9 +117,7 @@ export function Dashboard() {
               <div className="text-2xl font-bold text-[#2c3e50]">
                 {stat.value}
               </div>
-              <p className="text-xs text-[#717182]">
-                {stat.change} from yesterday
-              </p>
+              <p className="text-xs text-[#717182]">{stat.change}</p>
             </CardContent>
           </Card>
         ))}
@@ -145,6 +143,16 @@ export function Dashboard() {
                 </TableRow>
               </TableHeader>
               <TableBody>
+                {recentOrders?.length === 0 && (
+                  <TableRow>
+                    <TableCell
+                      className=" font-bold text-black/50 "
+                      colSpan={4}
+                    >
+                      No Data
+                    </TableCell>
+                  </TableRow>
+                )}
                 {recentOrders?.map((collection) => (
                   <TableRow key={collection.id}>
                     <TableCell className="font-medium">

@@ -350,30 +350,31 @@ export function UserManagement() {
               Add New User
             </Button>
           </DialogTrigger>
-          <DialogContent className="sm:max-w-[425px]">
+          <DialogContent className="sm:max-w-[425px]  ">
             <DialogHeader>
               <DialogTitle>Add New User</DialogTitle>
               <DialogDescription>
                 Create a new user account for the system.
               </DialogDescription>
             </DialogHeader>
-            <div className="space-y-4 py-4">
-              <div className="space-y-2">
-                <Label htmlFor="userType">User Type</Label>
-                <Select value={userType} onValueChange={setUserType}>
-                  <SelectTrigger
-                    className={`!h-12 w-full bg-[#f8fafc] border-[#e2e8f0] focus:border-[#3498db] focus:ring-[#3498db]/20 rounded-xl $`}
-                  >
-                    <SelectValue placeholder="Select user type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="executive">Field Executive</SelectItem>
-                    <SelectItem value="admin">Administrator</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
+            <div className="max-h-[65vh] overflow-y-auto">
+              <div className="space-y-4 py-4">
+                <div className="space-y-2">
+                  <Label htmlFor="userType">User Type</Label>
+                  <Select value={userType} onValueChange={setUserType}>
+                    <SelectTrigger
+                      className={`!h-12 w-full bg-[#f8fafc] border-[#e2e8f0] focus:border-[#3498db] focus:ring-[#3498db]/20 rounded-xl $`}
+                    >
+                      <SelectValue placeholder="Select user type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="executive">Field Executive</SelectItem>
+                      <SelectItem value="admin">Administrator</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
 
-              {/* {userType === "admin" && (
+                {/* {userType === "admin" && (
                 <div className="space-y-2">
                   <Label htmlFor="adminRole">Role</Label>
                   <Select value={adminRole} onValueChange={setAdminRole}>
@@ -388,17 +389,17 @@ export function UserManagement() {
                 </div>
               )} */}
 
-              <div className="space-y-2">
-                <Label htmlFor="fullName">Full Name</Label>
-                <Input
-                  id="fullName"
-                  placeholder="Enter full name"
-                  className="h-12 bg-[#f8fafc] border-[#e2e8f0] focus:border-[#3498db] focus:ring-[#3498db]/20 rounded-xl"
-                  value={fullName}
-                  onChange={(e) => setFullName(e.target.value)}
-                />
-              </div>
-              {/* <div className="space-y-2">
+                <div className="space-y-2">
+                  <Label htmlFor="fullName">Full Name</Label>
+                  <Input
+                    id="fullName"
+                    placeholder="Enter full name"
+                    className="h-12 bg-[#f8fafc] border-[#e2e8f0] focus:border-[#3498db] focus:ring-[#3498db]/20 rounded-xl"
+                    value={fullName}
+                    onChange={(e) => setFullName(e.target.value)}
+                  />
+                </div>
+                {/* <div className="space-y-2">
                 <Label htmlFor="userId">User ID</Label>
                 <Input
                   id="userId"
@@ -407,131 +408,134 @@ export function UserManagement() {
                   onChange={(e) => setUserIdInput(e.target.value)}
                 />
               </div> */}
-              <div className="space-y-2">
-                <Label htmlFor="phone">Phone Number</Label>
-                <div className="relative flex items-center">
-                  <div className="absolute left-3 top-1/2 -translate-y-1/2 text-[#717182] font-medium ">
-                    +91
+                <div className="space-y-2">
+                  <Label htmlFor="phone">Phone Number</Label>
+                  <div className="relative flex items-center">
+                    <div className="absolute left-3 top-1/2 -translate-y-1/2 text-[#717182] font-medium ">
+                      +91
+                    </div>
+                    <Input
+                      id="phone"
+                      type="text"
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                      placeholder="Enter 10-digit mobile number"
+                      className={`h-12 pl-12 bg-[#f8fafc] border-[#e2e8f0] focus:border-[#3498db] focus:ring-[#3498db]/20 rounded-xl $`}
+                      maxLength={10}
+                      required
+                    />
                   </div>
-                  <Input
-                    id="phone"
-                    type="text"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    placeholder="Enter 10-digit mobile number"
-                    className={`h-12 pl-12 bg-[#f8fafc] border-[#e2e8f0] focus:border-[#3498db] focus:ring-[#3498db]/20 rounded-xl $`}
-                    maxLength={10}
-                    required
-                  />
                 </div>
-              </div>
-              {/* {userType === "executive" && (
+                {/* {userType === "executive" && (
                 <div className="space-y-2">
                   <Label htmlFor="coverage">Coverage Area</Label>
                   <Input id="coverage" placeholder="Enter coverage area" />
                 </div>
               )} */}
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  className={`h-12 bg-[#f8fafc] border-[#e2e8f0] focus:border-[#3498db] focus:ring-[#3498db]/20 rounded-xl $`}
-                  placeholder="Enter email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
+                <div className="space-y-2">
+                  <Label htmlFor="email">Email</Label>
+                  <Input
+                    id="email"
+                    className={`h-12 bg-[#f8fafc] border-[#e2e8f0] focus:border-[#3498db] focus:ring-[#3498db]/20 rounded-xl $`}
+                    placeholder="Enter email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
+                </div>
               </div>
+              {userType == "admin" && (
+                <>
+                  <div className="space-y-2">
+                    <Label
+                      htmlFor="password"
+                      className="text-[#2c3e50] font-medium"
+                    >
+                      Password
+                    </Label>
+                    <div className="relative">
+                      <Input
+                        id="password"
+                        type={showPassword ? "text" : "password"}
+                        value={password}
+                        onChange={handlePasswordChange}
+                        placeholder="Enter your password"
+                        className={`h-12 bg-[#f8fafc] border-[#e2e8f0] focus:border-[#3498db] focus:ring-[#3498db]/20 rounded-xl pr-12 ${
+                          passwordError
+                            ? "border-red-500 focus:border-red-500"
+                            : ""
+                        }`}
+                        required
+                      />
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        className="absolute right-3 top-1/2 -translate-y-1/2 h-8 w-8 p-0 hover:bg-transparent"
+                        onClick={() => setShowPassword(!showPassword)}
+                      >
+                        {showPassword ? (
+                          <EyeOff className="h-4 w-4 text-[#717182]" />
+                        ) : (
+                          <Eye className="h-4 w-4 text-[#717182]" />
+                        )}
+                      </Button>
+                    </div>
+                    {passwordError && (
+                      <p className="text-sm text-red-500 mt-1">
+                        {passwordError}
+                      </p>
+                    )}
+                    <div className="text-xs text-[#717182] mt-1">
+                      Password must contain at least 8 characters with 1
+                      uppercase, 1 lowercase, 1 digit, and 1 special character
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label
+                      htmlFor="password"
+                      className="text-[#2c3e50] font-medium"
+                    >
+                      Confirm Password
+                    </Label>
+                    <div className="relative">
+                      <Input
+                        id="password"
+                        type={showConfirmPassword ? "text" : "password"}
+                        value={confirmPassword}
+                        onChange={handleConfirmPasswordChange}
+                        placeholder="Enter your password"
+                        className={`h-12 bg-[#f8fafc] border-[#e2e8f0] focus:border-[#3498db] focus:ring-[#3498db]/20 rounded-xl pr-12 ${
+                          passwordError
+                            ? "border-red-500 focus:border-red-500"
+                            : ""
+                        }`}
+                        required
+                      />
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        className="absolute right-3 top-1/2 -translate-y-1/2 h-8 w-8 p-0 hover:bg-transparent"
+                        onClick={() =>
+                          setShowConfirmPassword(!showConfirmPassword)
+                        }
+                      >
+                        {showConfirmPassword ? (
+                          <EyeOff className="h-4 w-4 text-[#717182]" />
+                        ) : (
+                          <Eye className="h-4 w-4 text-[#717182]" />
+                        )}
+                      </Button>
+                    </div>
+                    {confirmPasswordError && (
+                      <p className="text-sm text-red-500 mt-1">
+                        {confirmPasswordError}
+                      </p>
+                    )}
+                  </div>
+                </>
+              )}
             </div>
-            {userType == "admin" && (
-              <>
-                <div className="space-y-2">
-                  <Label
-                    htmlFor="password"
-                    className="text-[#2c3e50] font-medium"
-                  >
-                    Password
-                  </Label>
-                  <div className="relative">
-                    <Input
-                      id="password"
-                      type={showPassword ? "text" : "password"}
-                      value={password}
-                      onChange={handlePasswordChange}
-                      placeholder="Enter your password"
-                      className={`h-12 bg-[#f8fafc] border-[#e2e8f0] focus:border-[#3498db] focus:ring-[#3498db]/20 rounded-xl pr-12 ${
-                        passwordError
-                          ? "border-red-500 focus:border-red-500"
-                          : ""
-                      }`}
-                      required
-                    />
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="sm"
-                      className="absolute right-3 top-1/2 -translate-y-1/2 h-8 w-8 p-0 hover:bg-transparent"
-                      onClick={() => setShowPassword(!showPassword)}
-                    >
-                      {showPassword ? (
-                        <EyeOff className="h-4 w-4 text-[#717182]" />
-                      ) : (
-                        <Eye className="h-4 w-4 text-[#717182]" />
-                      )}
-                    </Button>
-                  </div>
-                  {passwordError && (
-                    <p className="text-sm text-red-500 mt-1">{passwordError}</p>
-                  )}
-                  <div className="text-xs text-[#717182] mt-1">
-                    Password must contain at least 8 characters with 1
-                    uppercase, 1 lowercase, 1 digit, and 1 special character
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <Label
-                    htmlFor="password"
-                    className="text-[#2c3e50] font-medium"
-                  >
-                    Confirm Password
-                  </Label>
-                  <div className="relative">
-                    <Input
-                      id="password"
-                      type={showConfirmPassword ? "text" : "password"}
-                      value={confirmPassword}
-                      onChange={handleConfirmPasswordChange}
-                      placeholder="Enter your password"
-                      className={`h-12 bg-[#f8fafc] border-[#e2e8f0] focus:border-[#3498db] focus:ring-[#3498db]/20 rounded-xl pr-12 ${
-                        passwordError
-                          ? "border-red-500 focus:border-red-500"
-                          : ""
-                      }`}
-                      required
-                    />
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="sm"
-                      className="absolute right-3 top-1/2 -translate-y-1/2 h-8 w-8 p-0 hover:bg-transparent"
-                      onClick={() =>
-                        setShowConfirmPassword(!showConfirmPassword)
-                      }
-                    >
-                      {showConfirmPassword ? (
-                        <EyeOff className="h-4 w-4 text-[#717182]" />
-                      ) : (
-                        <Eye className="h-4 w-4 text-[#717182]" />
-                      )}
-                    </Button>
-                  </div>
-                  {confirmPasswordError && (
-                    <p className="text-sm text-red-500 mt-1">
-                      {confirmPasswordError}
-                    </p>
-                  )}
-                </div>
-              </>
-            )}
             <div className="flex justify-end gap-2">
               <Button variant="outline" onClick={() => setShowAddUser(false)}>
                 Cancel
