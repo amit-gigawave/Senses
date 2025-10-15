@@ -44,11 +44,21 @@ export const useCreateUserMutation = ({
   });
 };
 
-export const useUpdateStatusMutation = () => {
+export const useUpdateStatusMutation = (role: string) => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationKey: qKey(apiEndpoints.userManagement.updateStatus),
     mutationFn: (data: { id: string; isActive: boolean }) => updateStatus(data),
-    onSuccess: () => {
+    onSuccess: (_, variables) => {
+      queryClient.setQueryData(
+        qKey([apiEndpoints.user.users, role]),
+        (oldData: any) =>
+          oldData.map((user: any) =>
+            user.id === variables.id
+              ? { ...user, isActive: variables.isActive }
+              : user
+          )
+      );
       toast.success("User status updated successfully");
     },
     onError: (e) => {

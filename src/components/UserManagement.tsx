@@ -110,7 +110,7 @@ export function UserManagement() {
     isPending,
     isFetching,
   } = useGetUsersQuery(selectedTab);
-  const { mutateAsync: updateStatus } = useUpdateStatusMutation();
+  const { mutateAsync: updateStatus } = useUpdateStatusMutation(selectedTab);
   const { mutateAsync: createUser, isPending: createUserPending } =
     useCreateUserMutation({
       isAdministrator: userType === "admin",
@@ -214,6 +214,13 @@ export function UserManagement() {
         </TableRow>
       </TableHeader>
       <TableBody>
+        {!users || users.length === 0 ? (
+          <TableRow>
+            <TableCell colSpan={6} className="text-center">
+              No users found
+            </TableCell>
+          </TableRow>
+        ) : null}
         {users?.map((user) => (
           <TableRow key={user.id}>
             <TableCell className="font-medium">{user.phone}</TableCell>
@@ -271,6 +278,15 @@ export function UserManagement() {
         </TableRow>
       </TableHeader>
       <TableBody>
+        {!users || users.length === 0 ? (
+          <TableRow>
+            <TableCell colSpan={6} className="text-center">
+              No users found
+            </TableCell>
+          </TableRow>
+        ) : (
+          <></>
+        )}
         {users?.map((user) => (
           <TableRow key={user.id}>
             <TableCell className="font-medium">{user.phone}</TableCell>
@@ -317,6 +333,14 @@ export function UserManagement() {
         </TableRow>
       </TableHeader>
       <TableBody>
+        {!users ||
+          (users.length === 0 && (
+            <TableRow>
+              <TableCell colSpan={6} className="text-center">
+                No users found
+              </TableCell>
+            </TableRow>
+          ))}
         {users?.map((user) => (
           <TableRow key={user.id}>
             <TableCell className="font-medium">{user.phone}</TableCell>

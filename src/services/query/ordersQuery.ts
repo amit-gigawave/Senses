@@ -33,8 +33,7 @@ export const useAssignOrderMutation = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationKey: qKey(apiEndpoints.orders.assignOrder),
-    mutationFn: (data: { id: string; fieldExecutiveId: string }) =>
-      assignOrder(data),
+    mutationFn: assignOrder,
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: qKey(apiEndpoints.orders.orders),

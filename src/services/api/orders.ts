@@ -36,8 +36,9 @@ export const getOrders = async ({
       params.append("hospitalStaffId", hospitalStaffId);
     if (startDate !== undefined) params.append("startDate", startDate);
     if (endDate !== undefined) params.append("endDate", endDate);
-    const url = `${apiEndpoints.orders.orders}${params.toString() ? `?${params.toString()}` : ""
-      }`;
+    const url = `${apiEndpoints.orders.orders}${
+      params.toString() ? `?${params.toString()}` : ""
+    }`;
     const snapshot = await axiosInstance.get(url);
     if (snapshot.status == 200) {
       return snapshot.data;
@@ -48,18 +49,23 @@ export const getOrders = async ({
   }
 };
 
-export const getHospitalsReports = async ({ startDate, endDate, hospitalName }: {
+export const getHospitalsReports = async ({
+  startDate,
+  endDate,
+  hospitalName,
+}: {
   startDate?: string;
   endDate?: string;
-  hospitalName?: string
+  hospitalName?: string;
 }): Promise<OrderType[]> => {
   try {
     const params = new URLSearchParams();
     if (startDate !== undefined) params.append("startDate", startDate);
     if (endDate !== undefined) params.append("endDate", endDate);
     if (hospitalName !== undefined) params.append("hospitalName", hospitalName);
-    const url = `${apiEndpoints.orders.hospitalReports}${params.toString() ? `?${params.toString()}` : ""
-      }`;
+    const url = `${apiEndpoints.orders.hospitalReports}${
+      params.toString() ? `?${params.toString()}` : ""
+    }`;
     const snapshot = await axiosInstance.get(url);
     if (snapshot.status == 200) {
       return snapshot.data.orders;
@@ -68,18 +74,20 @@ export const getHospitalsReports = async ({ startDate, endDate, hospitalName }: 
   } catch (e) {
     throw handleErr({ e });
   }
-}
+};
 
 export const assignOrder = async ({
   id,
   fieldExecutiveId,
+  assign,
 }: {
   id: string;
   fieldExecutiveId: string;
+  assign: boolean;
 }): Promise<OrderType> => {
   try {
     const snapshot = await axiosInstance.patch(
-      apiEndpoints.orders.assignOrder.replace(":id", id),
+      apiEndpoints.orders.assignOrder.replace(":id", id) + `?assign=${assign}`,
       {
         fieldExecutiveId,
       }

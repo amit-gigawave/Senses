@@ -56,6 +56,7 @@ export function OrderAssignment() {
       await assignOrder({
         id: selectedOrder.id,
         fieldExecutiveId: selectedExecutive,
+        assign: true,
       });
       setShowAssignDialog(false);
       setSelectedOrder(null);
@@ -85,6 +86,12 @@ export function OrderAssignment() {
               </CardDescription>
             </CardHeader>
             <CardContent>
+              {!pendingOrders ||
+                (pendingOrders.length === 0 && (
+                  <div className="text-center">
+                    <p className="text-muted-foreground">No pending orders</p>
+                  </div>
+                ))}
               <div className="space-y-4">
                 {pendingOrders?.map((order) => (
                   <div
@@ -164,6 +171,14 @@ export function OrderAssignment() {
               </CardDescription>
             </CardHeader>
             <CardContent>
+              {!availableExecutives ||
+                (availableExecutives.length === 0 && (
+                  <div className="text-center">
+                    <p className="text-sm text-[#717182]">
+                      No available executives found
+                    </p>
+                  </div>
+                ))}
               <div className="space-y-4">
                 {availableExecutives?.map(
                   (executive) =>
