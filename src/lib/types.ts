@@ -91,6 +91,12 @@ export type FieldExecutiveType = {
   updatedAt: string;
 };
 
+export type UpdateExecutiveType = {
+  id: string;
+  name: string;
+  email: string;
+};
+
 export type UserCreateType = {
   name: string;
   email: string;

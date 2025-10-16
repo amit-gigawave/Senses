@@ -177,6 +177,8 @@ export function HospitalTab() {
                 <TableHead>Executive Name</TableHead>
                 <TableHead>Amount Collected</TableHead>
                 <TableHead>Date of Collection</TableHead>
+                <TableHead>Patient Name</TableHead>
+                <TableHead>Patient Number</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -189,6 +191,8 @@ export function HospitalTab() {
                   <TableCell>{report.fieldExecutive?.name}</TableCell>
                   <TableCell>{report.amountCollected}</TableCell>
                   <TableCell>{format(report.collectionDate!, "PPP")}</TableCell>
+                  <TableCell>{report.patientName}</TableCell>
+                  <TableCell>{report.patientMobileNumber}</TableCell>
                 </TableRow>
               ))}
               {hospitalReportsData?.length === 0 && (

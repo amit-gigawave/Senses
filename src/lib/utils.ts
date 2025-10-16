@@ -71,7 +71,7 @@ export const qKey = (input: string | string[]): string[] => {
 };
 
 export const axiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_BASE_URL,
+  baseURL: "https://bk.5senses.co.in", //TODO: Need to keep it in .env
   timeout: 2000,
   timeoutErrorMessage:
     "Unable to connect to our servers. please check your internet connection",

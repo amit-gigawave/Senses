@@ -61,7 +61,10 @@ export const updateUser = async (data: FieldExecutiveType) => {
   try {
     const snapshot = await axiosInstance.patch(
       apiEndpoints.userManagement.updateUser.replace(":id", data.id),
-      data
+      {
+        name: data.name,
+        email: data.email,
+      }
     );
     if (snapshot.status == 200) {
       return snapshot.data;

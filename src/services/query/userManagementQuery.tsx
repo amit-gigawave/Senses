@@ -71,7 +71,7 @@ export const useUpdateUserMutation = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationKey: qKey(apiEndpoints.userManagement.updateUser),
-    mutationFn: (data: FieldExecutiveType) => updateUser(data),
+    mutationFn: updateUser,
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({
         queryKey: qKey([apiEndpoints.user.users, variables.role]),

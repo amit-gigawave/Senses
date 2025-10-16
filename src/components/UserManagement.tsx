@@ -42,6 +42,7 @@ import type { FieldExecutiveType } from "@/lib/types";
 import {
   useCreateUserMutation,
   useUpdateStatusMutation,
+  useUpdateUserMutation,
 } from "@/services/query/userManagementQuery";
 import type { UserCreateType } from "@/lib/types";
 import { exportJsonToExcel } from "@/lib/exporters/reportExport";
@@ -117,7 +118,8 @@ export function UserManagement() {
       password,
       confirmPassword,
     });
-  // const { mutateAsync: updateUser, isPending: updatePending } = useUpdateUserMutation()
+  const { mutateAsync: updateUser, isPending: updatePending } =
+    useUpdateUserMutation();
 
   const handleAddUser = async () => {
     // Construct the user object
@@ -142,14 +144,16 @@ export function UserManagement() {
     setEmail("");
   };
 
-  const handleEditUser = (user: any) => {
+  const handleEditUser = async (user: any) => {
     setEditingUser(user);
     setEditName(user.name);
     setEditEmail(user.email);
   };
 
-  const handleSaveEdit = () => {
+  const handleSaveEdit = async () => {
     // Handle save edit logic here
+
+    await updateUser({ ...editingUser, name: editName, email: editEmail });
     setEditingUser(null);
     setEditName("");
     setEditEmail("");

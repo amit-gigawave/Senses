@@ -14,6 +14,8 @@ function normalizeRows(data: any[]) {
     "Collection Date": r.collectionDate
       ? format(new Date(r.collectionDate), "yyyy-MM-dd")
       : r.dateOfCollection ?? "",
+    "Patient Name": r.patientName ?? r.patient?.name ?? "",
+    "Patient Number": r.patientMobileNumber ?? r.patient?.mobileNumber ?? "",
   }));
 }
 
@@ -31,19 +33,25 @@ export function exportReport(type: ReportExportType, data: any[]) {
 
   if (type === "pdf") {
     const doc = new jsPDF({ orientation: "landscape" });
-    const head = [[
-      "Order #",
-      "Hospital",
-      "Executive",
-      "Amount Collected",
-      "Collection Date",
-    ]];
+    const head = [
+      [
+        "Order #",
+        "Hospital",
+        "Executive",
+        "Amount Collected",
+        "Collection Date",
+        "Patient Name",
+        "Patient Number",
+      ],
+    ];
     const body = rows.map((r) => [
       r["Order #"],
       r.Hospital,
       r.Executive,
       r["Amount Collected"],
       r["Collection Date"],
+      r["Patient Name"],
+      r["Patient Number"],
     ]);
 
     autoTable(doc, {
@@ -69,6 +77,9 @@ export function exportJsonToExcel(
   const worksheet = XLSX.utils.json_to_sheet(rows ?? []);
   const workbook = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(workbook, worksheet, sheetName || "Data");
-  const fileName = `${filePrefix || "Export"}_${format(new Date(), "yyyy-MM-dd_HH-mm")}.xlsx`;
+  const fileName = `${filePrefix || "Export"}_${format(
+    new Date(),
+    "yyyy-MM-dd_HH-mm"
+  )}.xlsx`;
   XLSX.writeFile(workbook, fileName);
 }

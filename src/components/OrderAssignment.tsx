@@ -238,7 +238,7 @@ export function OrderAssignment() {
                   <div>
                     <span className="text-[#717182]">Order ID:</span>
                     <span className="ml-2 text-[#2c3e50]">
-                      {selectedOrder.id}
+                      {selectedOrder.orderNumber}
                     </span>
                   </div>
                   <div>
@@ -276,7 +276,7 @@ export function OrderAssignment() {
                   <SelectContent>
                     {availableExecutives?.map((executive) =>
                       executive.isActive ? (
-                        <SelectItem key={executive.id} value={executive.userId}>
+                        <SelectItem key={executive.id} value={executive.id}>
                           {executive.name} ({executive.userId})
                         </SelectItem>
                       ) : null
